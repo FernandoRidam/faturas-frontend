@@ -6,7 +6,7 @@ import { Loading } from "./index";
 import theme from "../../config/theme";
 import { StateProvider } from "../../store";
 
-describe("Button testes", () => {
+describe("Loading testes", () => {
   test("Teste de renderização", () => {
     const text = "Aguarde...";
 
