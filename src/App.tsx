@@ -1,26 +1,67 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled, { ThemeProvider } from 'styled-components';
+import { MaterialDesignContent, SnackbarProvider } from 'notistack';
+import { RouterProvider } from 'react-router-dom';
+
+import { StateProvider, useStore } from './store';
+import theme from './config/theme';
+import { Loading } from './components/Loading';
+import appRouter from "./routers/appRouter";
+
+import './index.css';
+
+const autoHideDuration = 2000;
+
+const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
+  '&.notistack-MuiContent-success': {
+    backgroundColor: theme.COLORS.SUCCESS,
+  },
+  '&.notistack-MuiContent-warning': {
+    backgroundColor: theme.COLORS.WARNING,
+  },
+  '&.notistack-MuiContent-error': {
+    backgroundColor: theme.COLORS.ERROR,
+  },
+}));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <StateProvider>
+      <ThemeProvider theme={ theme }>
+        <SnackbarProvider
+          autoHideDuration={ autoHideDuration }
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          maxSnack={ 3 }
+          Components={{
+            success: StyledMaterialDesignContent,
+            default: StyledMaterialDesignContent,
+            error: StyledMaterialDesignContent,
+            warning: StyledMaterialDesignContent,
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Content />
+        </SnackbarProvider>
+      </ThemeProvider>
+    </StateProvider>
   );
+}
+
+function Content() {
+  const {
+    loading,
+  } = useStore();
+
+  return (
+    <>
+      <RouterProvider
+        router={ appRouter }
+      />
+
+      {
+        loading && (<Loading />)
+      }
+    </>
+  );
+  ;
 }
 
 export default App;
